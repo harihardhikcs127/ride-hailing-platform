@@ -1,4 +1,4 @@
-package com.ridehailing.match_service;
+package com.ridehailing.matchservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
