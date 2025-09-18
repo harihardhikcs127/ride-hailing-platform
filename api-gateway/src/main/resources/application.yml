@@ -25,5 +25,11 @@ spring:
                 - Path=/api/v1/driver/**
               filters:
                 - AuthenticationFilter
+            - id: trip_service_route
+              uri: http://localhost:8084
+              predicates:
+                - Path=/api/v1/trip/**
+              filters:
+                - AuthenticationFilter
     discovery:
       enabled: false
