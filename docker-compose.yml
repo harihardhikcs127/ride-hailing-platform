@@ -23,6 +23,19 @@ services:
     networks:
       - ridehailing-net
 
+  # --- ADD THE NEW SERVICE DEFINITION BELOW ---
+  passenger-service:
+    build: ./passenger-service
+    container_name: passenger_service_app
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ridehailing
+    depends_on:
+      - postgres
+    networks:
+      - ridehailing-net
+
 volumes:
   postgres_data:
 
