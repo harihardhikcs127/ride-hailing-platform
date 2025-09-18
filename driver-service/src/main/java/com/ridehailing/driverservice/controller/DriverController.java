@@ -7,6 +7,9 @@ import com.ridehailing.driverservice.service.DriverLocationService; // Import th
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.ridehailing.driverservice.model.DriverStatus;
+import java.util.Optional;
+import java.util.Map;
 
 import java.util.List;
 
@@ -32,11 +35,42 @@ public class DriverController {
         return ResponseEntity.ok(drivers);
     }
 
+    // --- ADD THE NEW STATUS UPDATE ENDPOINT ---
+    @PostMapping("/{driverId}/status")
+    public ResponseEntity<String> updateStatus(
+            @PathVariable Long driverId,
+            @RequestBody Map<String, String> statusUpdate) {
+
+        Optional<Driver> driverOptional = driverRepository.findById(driverId);
+        if (driverOptional.isEmpty()) {
+            return ResponseEntity.status(404).body("Driver not found");
+        }
+
+        Driver driver = driverOptional.get();
+        DriverStatus newStatus = DriverStatus.valueOf(statusUpdate.get("status").toUpperCase());
+        driver.setStatus(newStatus);
+        driverRepository.save(driver);
+
+        // If driver goes offline, remove them from Redis
+        if (newStatus == DriverStatus.OFFLINE) {
+            driverLocationService.removeDriverLocation(driverId);
+        }
+
+        return ResponseEntity.ok("Status updated successfully for driver " + driverId);
+    }
+
     // --- ADD THE NEW ENDPOINT BELOW ---
     @PostMapping("/{driverId}/location")
     public ResponseEntity<String> updateLocation(
             @PathVariable Long driverId,
             @RequestBody DriverLocationDto locationDto) {
+
+        // --- ADD THIS CHECK ---
+        Optional<Driver> driverOptional = driverRepository.findById(driverId);
+        if (driverOptional.isEmpty() || driverOptional.get().getStatus() == DriverStatus.OFFLINE) {
+            return ResponseEntity.status(400).body("Driver is not online or does not exist.");
+        }
+
         driverLocationService.updateDriverLocation(
             driverId,
             locationDto.getLongitude(),

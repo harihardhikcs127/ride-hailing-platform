@@ -1,10 +1,6 @@
 package com.ridehailing.driverservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "drivers")
@@ -16,6 +12,19 @@ public class Driver {
     private String name;
     private String licenseNumber;
     private String vehicleDetails;
+
+    // --- ADD THIS NEW FIELD ---
+    @Enumerated(EnumType.STRING)
+    private DriverStatus status;
+
+    // --- ADD GETTER AND SETTER FOR THE NEW FIELD ---
+    public DriverStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DriverStatus status) {
+        this.status = status;
+    }
 
     // Getters and Setters
     public Long getId() {

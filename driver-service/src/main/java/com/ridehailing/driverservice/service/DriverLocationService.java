@@ -22,4 +22,10 @@ public class DriverLocationService {
         );
         System.out.println("Updated location for driver " + driverId + " to [" + longitude + ", " + latitude + "]");
     }
+
+    // --- ADD THIS NEW METHOD ---
+    public void removeDriverLocation(Long driverId) {
+        redisTemplate.opsForGeo().remove(DRIVER_GEO_KEY, driverId.toString());
+        System.out.println("Removed location for driver " + driverId);
+    }
 }

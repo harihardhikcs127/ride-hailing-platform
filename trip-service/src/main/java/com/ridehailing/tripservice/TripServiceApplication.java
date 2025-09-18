@@ -1,4 +1,4 @@
-package com.ridehailing.trip_service;
+package com.ridehailing.tripservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
